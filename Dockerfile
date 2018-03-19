@@ -14,6 +14,7 @@ RUN a2enmod auth_digest
 RUN mkdir /var/svn-backup
 RUN mkdir -p /var/local/svn
 RUN mkdir /etc/apache2/dav_svn
+RUN mkdir /etc/apache2/custom-conf
 
 ADD files/dav_svn.conf /etc/apache2/mods-available/dav_svn.conf
 
@@ -24,8 +25,7 @@ ADD files/svn-entrypoint.sh /usr/local/bin/
 RUN chmod a+x /usr/local/bin/svn*
 
 RUN echo "*/10 * * * *	root    /usr/local/bin/svn-project-creator.sh" >> /etc/crontab
-RUN echo "0 0 * * *	root    /usr/local/bin/svn-backuper.sh" >> /etc/crontab
 
 RUN sed -i 's/# exec CMD/&\nsvn-entrypoint.sh/g' /opt/entrypoint.sh
 
-VOLUME ["/var/local/svn", "/var/svn-backup", "/etc/apache/dav_svn"]
+VOLUME ["/var/local/svn", "/etc/apache2/dav_svn", "/etc/apache2/custom-conf"]
